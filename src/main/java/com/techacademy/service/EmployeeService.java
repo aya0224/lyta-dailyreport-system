@@ -136,6 +136,9 @@ public class EmployeeService {
     		return ErrorKinds.RANGECHECK_ERROR;
     	}
 
+    	String inputPassword = employee.getPassword();
+    	if  (inputPassword !=null && !inputPassword.isEmpty()){
+
     		if (isHalfSizeCheckError(employee)) {
 
                 return ErrorKinds.HALFSIZE_ERROR;
@@ -150,10 +153,11 @@ public class EmployeeService {
 
 
     	dbEmployee.setPassword(passwordEncoder.encode(employee.getPassword()));
+    	}
 
 
     	dbEmployee.setName(employee.getName());
-    	dbEmployee.setPassword(employee.getPassword());
+    	dbEmployee.setRole(employee.getRole());
     	dbEmployee.setUpdatedAt(LocalDateTime.now());
 
     	employeeRepository.save(dbEmployee);
