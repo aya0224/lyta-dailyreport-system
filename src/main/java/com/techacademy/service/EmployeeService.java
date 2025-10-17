@@ -151,7 +151,7 @@ public class EmployeeService {
             }
 
 
-
+        //パスワードをエンコードする、（変換）　　（デコード：戻すこと）
     	dbEmployee.setPassword(passwordEncoder.encode(employee.getPassword()));
     	}
 
