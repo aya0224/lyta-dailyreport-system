@@ -19,6 +19,12 @@ import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
 import com.techacademy.service.ReportService;
 import com.techacademy.service.UserDetail;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.techacademy.repository.EmployeeRepository;
+import com.techacademy.entity.Employee;
 
 @Controller
 @RequestMapping("reports")
@@ -46,11 +52,24 @@ public class ReportController {
 	    }
 
 	// 従業員新規登録画面
+	 @Autowired
+	 private EmployeeRepository employeeRepository;
+
 	    @GetMapping(value = "/add")
-	    public String create(Model model) {
-	    	model.addAttribute("report", new Report());
+	    public String showNewReportForm(Model model) {
+	        // ログイン中のユーザー名を取得（通常は従業員コードやログインID）
+	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	        String loginCode = auth.getName();
 
+	        // ログインユーザーに対応するEmployeeをDBから取得
 
+	        Employee employee = employeeRepository.findByCode(loginCode);
+
+	        // モデルにセット
+	        model.addAttribute("loginUser", employee);
+
+	        // 空のReportを渡す
+	        model.addAttribute("report", new Report());
 
 	        return "reports/new";
 	    }
@@ -67,12 +86,16 @@ public class ReportController {
 	        if (reportService.existsSameDate(employee, report)) {
 	            result.rejectValue("reportDate", null, "既に登録されている日付です");
 	        }*/
+            if(result.hasErrors()) {
+            	model.addAttribute("loginUser", userDetail.getEmployee());
+            	return "reports/new";
+            }
 
-	        if (result.hasErrors()) {
-	            return "reports/new";
-	        }
+            reportService.save(report);
 
-	        reportService.save(report);
+
+
+
 
 	   /* ErrorKinds result =reportService.create(report, userDetail.getEmployee());
 	    if()
