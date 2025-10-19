@@ -50,7 +50,8 @@ public class ReportService {
         report.setUpdatedAt(now);
         reportRepository.save(report);
     }
-
+    
+    
     // 更新処理
     @Transactional
     public void update(Report report) {

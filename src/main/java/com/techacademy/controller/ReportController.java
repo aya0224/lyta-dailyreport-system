@@ -107,6 +107,16 @@ public class ReportController {
 	        return "redirect:/reports";
 	    }
 
+	  //詳細画面表示
+	    @GetMapping("/reports/{id}/detail")
+	    public String detail(@PathVariable("id") Integer id, Model model) {
+	    	Report report = reportService.findById(id);
+
+	    	model.addAttribute("report" , report);
+	    	return "reports/detail";
+	    }
+
+
 
 
 

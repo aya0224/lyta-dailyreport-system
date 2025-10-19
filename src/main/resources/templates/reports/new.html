@@ -47,6 +47,7 @@
                   <div class="form-text text-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
                 </div>
 
+
                 <!-- 業務エラー表示（例：同一日付チェック） -->
                 <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
 

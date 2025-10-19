@@ -1,5 +1,6 @@
 package com.techacademy.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLRestriction;
@@ -57,7 +58,7 @@ public class Report {
     @NotNull(message = "値を入力してください")
     @Column(name = "report_date",nullable = false)
     @DateTimeFormat(pattern ="yyyy-MM-dd")
-    private LocalDateTime reportDate;
+    private LocalDate reportDate;
 
 
 

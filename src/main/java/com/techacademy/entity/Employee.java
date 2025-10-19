@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+import jakarta.persistence.OneToMany;
 
 @Data
 @Entity
@@ -69,6 +70,7 @@ public class Employee {
     // 更新日時
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
 
 
 

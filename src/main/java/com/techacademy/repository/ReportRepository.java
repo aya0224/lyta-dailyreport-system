@@ -13,5 +13,5 @@ public interface ReportRepository extends JpaRepository<Report, Integer> {
 
 
 List<Report> findByEmployee(Employee employee);
-boolean existsByEmployeeAndReportDate(Employee employee, LocalDateTime reportDate);
+boolean existsByEmployeeAndReportDate(Employee employee, LocalDate localDate);
 }
