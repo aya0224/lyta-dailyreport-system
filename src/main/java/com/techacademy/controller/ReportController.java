@@ -108,13 +108,76 @@ public class ReportController {
 	    }
 
 	  //詳細画面表示
-	    @GetMapping("/reports/{id}/detail")
+	    @GetMapping("/{id}/detail")
 	    public String detail(@PathVariable("id") Integer id, Model model) {
 	    	Report report = reportService.findById(id);
 
 	    	model.addAttribute("report" , report);
 	    	return "reports/detail";
 	    }
+
+	    //更新画面表示
+	    @GetMapping("/{id}/update")
+	    public String update(@PathVariable("id") Integer id, Model model) {
+	    	Report report = reportService.findById(id);
+
+	    	model.addAttribute("report" , report);
+	    	return "reports/update";
+	    }
+
+	    //更新処理
+	    @PostMapping("/{id}/update")
+	    public String update(@PathVariable Integer id, @Validated Report report, BindingResult res, Model model) {
+
+	    if (res.hasErrors()) {
+	    	model.addAttribute("report",report);
+	    	return "reports/update";
+	    }
+
+	    	report.setId(id);
+	    	reportService.update(report);
+
+
+	    return "redirect:/reports";
+
+}
+
+	    /* 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
+	    // (findByIdでは削除フラグがTRUEのデータが取得出来ないため)
+	    try {
+	        ErrorKinds result = reportService.update(report);
+
+	        if (ErrorMessage.contains(result)) {
+	            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+	            return "reports/update";
+	        }
+
+	    } catch (DataIntegrityViolationException e) {
+	        model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
+	                ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+	        return "reports/update";
+	    }
+
+	    return "redirect:/reports";
+	}
+*/
+
+	    // 従業員削除処理
+	    @PostMapping(value = "/{id}/delete")
+	    public String delete(@PathVariable("id") Integer id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+
+	        ErrorKinds result = reportService.delete(id);
+
+	        if (ErrorMessage.contains(result)) {
+	            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+	            model.addAttribute("employee", reportService.findById(id));
+	            return detail(id, model);
+	        }
+
+	        return "redirect:/reports";
+	    }
+
+
 
 
 

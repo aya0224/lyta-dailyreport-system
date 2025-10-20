@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html class="h-100" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: head_fragment(title='日報 更新')"></head>
+
+<body class="h-100 overflow-hidden">
+  <div class="row h-100">
+    <!-- サイドバー -->
+    <div class="h-100 p-3 mb-2 bg-dark text-white col-sm-2">
+      <nav th:replace="common/side :: copy"></nav>
+    </div>
+
+    <!-- メイン -->
+    <div class="mt-3 h-100 col-sm-10">
+      <div class="container-fluid p-0">
+        <h1 class="h3 mb-3">日報 更新</h1>
+
+        <div class="col-12 col-xxl-8">
+          <div class="card">
+            <div class="card-body">
+              <!-- form object は controller で model.addAttribute("report", new Report()) 前提 -->
+              <form th:action="@{/reports/{id}/update(id=${report.id})}" th:object="${report}" method="post" novalidate>
+
+                <!-- 日付 -->
+                <div class="mb-3">
+                  <label class="form-label" for="reportDate">日付</label>
+                  <input type="date" id="reportDate" class="form-control col-md-4" th:field="*{reportDate}">
+                  <div class="form-text text-danger" th:if="${#fields.hasErrors('reportDate')}" th:errors="*{reportDate}"></div>
+                </div>
+
+                <!-- 氏名（ログイン中ユーザの名前をラベル表示） -->
+                <div class="mb-3">
+                    <label class="form-label">氏名</label>
+                    <td th:text="${report.employee.name}"></td>
+                </div>
+
+                <!-- タイトル -->
+                <div class="mb-3">
+                  <label class="form-label" for="title">タイトル</label>
+                  <input type="text"  class="form-control" th:field="*{title}" id="title"  maxlength="100" >
+                </div>
+
+                <!-- 内容 -->
+                <div class="mb-3">
+                  <label class="form-label" for="content">内容</label>
+                  <textarea id="content" class="form-control" th:field="*{content}" rows="10" maxlength="600" ></textarea>
+
+                </div>
+
+
+                <!-- 業務エラー表示（例：同一日付チェック） -->
+                <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
+
+                <!-- ボタン -->
+                <div class="mt-4">
+                  <button type="submit" class="btn btn-primary">更新</button>
+                  <a th:href="@{/reports}" class="btn btn-secondary ms-2">戻る</a>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
