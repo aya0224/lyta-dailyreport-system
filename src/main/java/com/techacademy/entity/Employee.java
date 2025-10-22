@@ -71,6 +71,11 @@ public class Employee {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+	public boolean isAdmin() {
+		// TODO 自動生成されたメソッド・スタブ
+		return "ADMIN".equals(this.role);
+	}
+
 
 
 

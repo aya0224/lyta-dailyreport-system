@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
+import com.techacademy.entity.Report.Role;
 import com.techacademy.repository.EmployeeRepository;
 import com.techacademy.repository.ReportRepository;
 
@@ -28,13 +29,13 @@ public class ReportService {
 
     //日報一覧
     public List<Report> findAll(){
-    	return reportRepository.findAll();
+    	return reportRepository.findByDeleteFlgFalse();
 
     }
 
     // 自分の日報のみ取得（一般用）
     public List<Report> findByEmployee(Employee employee) {
-        return reportRepository.findByEmployee(employee);
+        return reportRepository.findByEmployeeAndDeleteFlgFalse(employee);
     }
 
     // 1件取得
@@ -42,35 +43,30 @@ public class ReportService {
         return reportRepository.findById(id).orElse(null);
     }
 
+    //同じ日付かチェックする
+    public boolean existSameDate(Employee employee, Report report) {
+	   return reportRepository.existsByEmployeeAndReportDate(employee, report.getReportDate());
+    }
 
 
- // 登録処理
+
+
+    // 登録処理
     @Transactional
-    public void save(Report report) {
+    public ErrorKinds save(Report report) {
+
+    	if(reportRepository.existsByEmployeeAndReportDate(report.getEmployee(), report.getReportDate())) {
+    		return ErrorKinds.DATECHECK_ERROR;
+    	}
+
         LocalDateTime now = LocalDateTime.now();
         report.setCreatedAt(now);
         report.setUpdatedAt(now);
         reportRepository.save(report);
+		return ErrorKinds.SUCCESS;
     }
 
 
-    /* 更新処理
-    @Transactional
-    public void update(Report report) {
-        report.setUpdatedAt(LocalDateTime.now());
-        reportRepository.save(report);
-    }
-
-    論理削除
-    @Transactional
-    public void delete(Integer id) {
-        Report report = findById(id);
-        if (report != null) {
-            report.setDeleteFlg(true);
-            report.setUpdatedAt(LocalDateTime.now());
-            reportRepository.save(report);
-        }
-    }*/
      // 日報削除
     @Transactional
     public ErrorKinds delete(Integer Id) {
@@ -118,15 +114,7 @@ public class ReportService {
     	reportRepository.save(dbReport);
 
     	return ErrorKinds.SUCCESS;
-
-
-
-
-
-
-
 }
-
 
      //業務チェック（同じ社員・同じ日付が既に存在するか）
     public boolean existsSameDate(Employee employee, Report report) {

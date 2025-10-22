@@ -32,7 +32,7 @@ import lombok.Data;
 @SQLRestriction("delete_flg = false")
 public class Report {
 
-	/*
+
 	public static enum Role {
         GENERAL("一般"), ADMIN("管理者");
 
@@ -47,7 +47,7 @@ public class Report {
         }
     }
 
-    */
+
 
     // ID
     @Id //主キー
@@ -67,7 +67,7 @@ public class Report {
     // タイトル
     @NotEmpty(message ="値を入力してください")
     @Size(max = 100,message = "100文字以下で入力してください")
-    @Column(length = 100, nullable = false)
+    @Column(length = 600, nullable = false)
     private String title;
 
     //　内容
@@ -80,6 +80,11 @@ public class Report {
     @Column
     private String employee_code;
     */
+
+    // 権限
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     // 削除フラグ(論理削除を行うため)
     @Column(columnDefinition="TINYINT", nullable = false)
