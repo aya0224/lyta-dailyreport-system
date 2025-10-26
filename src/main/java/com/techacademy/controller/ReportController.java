@@ -91,6 +91,13 @@ public class ReportController {
 	    	Employee employee = userDetail.getEmployee();
 	        report.setEmployee(employee);
 
+	        Employee.Role empRole = employee.getRole();
+	        Report.Role reportRole = (empRole == Employee.Role.ADMIN)
+	        		               ? Report.Role.ADMIN
+	        		               : Report.Role.GENERAL;
+	        report.setRole(reportRole);
+
+
             if (result.hasErrors()) {
             	model.addAttribute("loginUser", userDetail.getEmployee());
             	model.addAttribute("report", report);
